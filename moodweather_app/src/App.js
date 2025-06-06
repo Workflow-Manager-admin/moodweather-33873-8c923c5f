@@ -229,7 +229,7 @@ function App() {
                   <span className="spinner"></span>
                 ) : (
                   <span>
-                    <span className="btn-icon" aria-hidden="true">🌈</span>
+                    <span className="btn-icon" aria-hidden="true">☁️</span>
                     Fetch Weather
                   </span>
                 )}
