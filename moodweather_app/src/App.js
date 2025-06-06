@@ -159,18 +159,16 @@ function App() {
       className="app"
       style={{
         minHeight: "100vh",
-        background: `url('${bgImage}') center center/cover no-repeat, var(--base-dark)`,
-        transition: "background-image 0.8s cubic-bezier(0.4, 0, 0.2, 1)"
+        // Layered gradient overlay for contrast and readability
+        background: `linear-gradient(135deg,rgba(30,40,58,0.82),rgba(28,28,45,0.54)), url('${bgImage}') center center/cover no-repeat, var(--base-dark)`,
+        transition: "background-image 0.7s cubic-bezier(.4,0,0.2,1),background 0.6s cubic-bezier(.4,0,0.2,1)"
       }}
     >
       {/* Navbar */}
       <nav className="navbar" aria-label="MoodWeather App Bar">
-        <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <div className="logo" tabIndex={0} aria-label="MoodWeather Logo">
-              <span className="logo-symbol" aria-hidden="true">☁️</span> MoodWeather
-            </div>
-            <span style={{ flex: 1 }} />
+        <div className="container navbar-inner">
+          <div className="logo" tabIndex={0} aria-label="MoodWeather Logo">
+            <span className="logo-symbol" aria-hidden="true">☁️</span> MoodWeather
           </div>
         </div>
       </nav>
@@ -178,62 +176,41 @@ function App() {
       {/* Main vertical stack container */}
       <main>
         <div className="container">
-          <div className="hero" style={{ paddingTop: 120, maxWidth: 480, margin: "0 auto" }}>
-            <div className="subtitle" id="intro-desc">
+          <section className="hero cool-hero">
+            <h2 className="subtitle" id="intro-desc">
               Check today's weather and reflect your mood.
-            </div>
+            </h2>
             <form
               aria-labelledby="form-title"
-              style={{ width: "100%", display: "flex", flexDirection: "column", gap: "16px" }}
+              className="weather-form"
               onSubmit={handleFetchWeather}
             >
-              <label htmlFor="city-input" style={{ textAlign: "left", width: "100%" }}>
+              <label htmlFor="city-input" className="form-label">
                 City
                 <input
                   id="city-input"
                   name="city"
                   type="text"
-                  className="input"
+                  className="input cool-input"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   required
                   aria-required="true"
                   aria-label="City"
-                  style={{
-                    width: "100%",
-                    fontSize: "1.1rem",
-                    padding: "10px 12px",
-                    marginTop: 4,
-                    borderRadius: 4,
-                    border: "1px solid var(--border-color)",
-                    background: "#23272f",
-                    color: "var(--text-color)",
-                    outline: "none",
-                  }}
                   autoComplete="off"
                   placeholder="Enter city name..."
+                  spellCheck={false}
                 />
               </label>
-              <label htmlFor="mood-select" style={{ textAlign: "left", width: "100%" }}>
+              <label htmlFor="mood-select" className="form-label">
                 Mood
                 <select
                   id="mood-select"
                   name="mood"
-                  className="input"
+                  className="input cool-select"
                   value={mood}
                   onChange={(e) => setMood(e.target.value)}
                   aria-label="Mood"
-                  style={{
-                    width: "100%",
-                    fontSize: "1.08rem",
-                    padding: "10px 12px",
-                    marginTop: 4,
-                    borderRadius: 4,
-                    border: "1px solid var(--border-color)",
-                    background: "#23272f",
-                    color: "var(--text-color)",
-                    outline: "none",
-                  }}
                 >
                   {moodOptions.map((option) => (
                     <option value={option} key={option}>
@@ -243,31 +220,25 @@ function App() {
                 </select>
               </label>
               <button
-                className="btn btn-large"
+                className="btn btn-large cool-btn"
                 type="submit"
                 disabled={loading}
                 aria-busy={loading}
-                style={{ marginTop: 12, marginBottom: 8 }}
               >
-                {loading ? "Checking weather..." : "Fetch Weather"}
+                {loading ? (
+                  <span className="spinner"></span>
+                ) : (
+                  <span>
+                    <span className="btn-icon" aria-hidden="true">🌈</span>
+                    Fetch Weather
+                  </span>
+                )}
               </button>
             </form>
             {/* Weather and error display */}
             <div
-              className="weather-display"
+              className={`weather-display weather-card${!!(weather || error) ? " active" : ""}`}
               aria-live="polite"
-              style={{
-                marginTop: 18,
-                width: "100%",
-                background: "rgba(255,255,255,0.04)",
-                borderRadius: 5,
-                padding: weather || error ? 22 : 0,
-                minHeight: 50,
-                color: "var(--text-color)",
-                border: weather || error ? "1px solid var(--border-color)" : "none",
-                boxShadow: "0 2px 16px rgba(0,0,0,0.11)",
-                backdropFilter: "blur(2.5px)"
-              }}
               role="region"
               aria-label="Weather result"
               tabIndex={0}
@@ -275,11 +246,7 @@ function App() {
               {/* Show error message, if any */}
               {error && (
                 <div
-                  style={{
-                    color: "#e74c3c",
-                    fontWeight: "500",
-                    fontSize: "1.07rem",
-                  }}
+                  className="weather-error"
                   role="alert"
                 >
                   {error}
@@ -288,61 +255,37 @@ function App() {
               {/* Show weather, if loaded */}
               {weather && (
                 <div>
-                  {/* City and temp */}
-                  <div style={{ fontWeight: "600", fontSize: "1.3rem" }}>
-                    {weather.location}
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
+                  <div className="weather-location">{weather.location}</div>
+                  <div className="weather-main-row">
                     <img
                       src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
                       alt={weather.desc}
-                      style={{ width: 54, height: 54 }}
+                      className="weather-icon"
                     />
-                    <span style={{ fontSize: "2.15rem", color: "var(--primary)", fontWeight: "600" }}>
-                      {weather.temp}°C
-                    </span>
+                    <span className="weather-temp">{weather.temp}°C</span>
                   </div>
                   {/* Mood and weather status */}
-                  <div style={{ fontSize: "1.07rem", color: "var(--secondary)", marginTop: 0 }}>
-                    Weather: {weather.main}
+                  <div className="weather-mainline">
+                    Weather: <span className="weather-main">{weather.main}</span>
                   </div>
-                  <div style={{ fontSize: "1.08rem", marginTop: 3 }}>
-                    Mood: <span style={{ color: "var(--accent)" }}>{mood}</span>
+                  <div className="weather-moodline">
+                    Mood: <span className="weather-mood">{mood}</span>
                   </div>
-                  {/* Motivational quote */}
-                  <div style={{
-                    marginTop: 20,
-                    fontStyle: "italic",
-                    fontSize: "1.08rem",
-                    color: "#ffe8a0",
-                    textShadow: "1px 1px 5px rgba(38,38,38,0.2)"
-                  }}>
+                  <div className="weather-quote">
                     “{moodWeatherData.quote}”
                   </div>
-                  {/* Outfit suggestion */}
-                  <div style={{
-                    marginTop: 12,
-                    fontSize: "1rem",
-                    color: "#e5ffb3",
-                    fontWeight: "500"
-                  }}>
+                  <div className="weather-suggestion">
                     Suggestion: {moodWeatherData.outfit}
                   </div>
                 </div>
               )}
             </div>
             {weather && (
-              <p style={{
-                color: "rgba(255,255,255,0.6)",
-                fontSize: 13,
-                marginTop: 20,
-                textAlign: "center",
-                fontStyle: "italic"
-              }}>
+              <p className="bg-disclaimer">
                 Background image adapts to your mood & weather!
               </p>
             )}
-          </div>
+          </section>
         </div>
       </main>
     </div>
