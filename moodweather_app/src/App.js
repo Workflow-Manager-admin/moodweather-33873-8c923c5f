@@ -28,7 +28,7 @@ function App() {
       setLoading(false);
       return;
     }
-    const API_KEY = "YOUR_OPENWEATHERMAP_API_KEY"; // <-- Replace with your actual OpenWeatherMap API key!
+    const API_KEY = "7b7c85836bda41485369c43acbf566cf"; // <-- OpenWeatherMap API key provided by user
     const endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
       city
     )}&appid=${API_KEY}&units=metric`;
