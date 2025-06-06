@@ -1,6 +1,10 @@
 :root {
-  --base-light: #00ffff;
-  --base-dark: #00008b;
+  /* Theming variables for MoodWeather */
+  --primary: #3498db;     /* blue */
+  --secondary: #2ecc71;   /* green */
+  --accent: #f1c40f;      /* yellow */
+  --base-light: var(--primary);
+  --base-dark: #1A1A1A;
   --text-color: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
   --border-color: rgba(255, 255, 255, 0.1);
