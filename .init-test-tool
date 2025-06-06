@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/moodweather-33873-8c923c5f/moodweather_app"
+}
